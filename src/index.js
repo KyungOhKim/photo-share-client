@@ -1,17 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+var query = `{totalPhotos, totalUsers}`;
+var url = "http://localhost:4000/graphql";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+var opts = {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ query })
+};
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+fetch(url, opts)
+  .then(res => res.json())
+  .then(
+    ({ data }) => `
+    <p>photos: ${data.totalPhotos}</p>
+    <p>users: ${data.totalUsers}</p>
+  `
+  )
+  .then(text => (document.body.innerHTML = text))
+  .catch(console.error);
