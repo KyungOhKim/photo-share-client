@@ -1,19 +1,49 @@
-var query = `{totalPhotos, totalUsers}`;
+import React from "react";
+import ReactDOM from "react-dom";
+import { request } from "graphql-request";
+
 var url = "http://localhost:4000/graphql";
 
-var opts = {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ query })
-};
+var query = `
+  query listUsers {
+    allUsers {
+      avatar
+      name
+    }
+  }
+`;
 
-fetch(url, opts)
-  .then(res => res.json())
-  .then(
-    ({ data }) => `
-    <p>photos: ${data.totalPhotos}</p>
-    <p>users: ${data.totalUsers}</p>
-  `
-  )
-  .then(text => (document.body.innerHTML = text))
-  .catch(console.error);
+var mutation = `
+  mutation populate($count: Int!) {
+    addFakeUsers(count: $count) {
+      githubLogin
+    }
+  }
+`;
+
+const App = ({ users = [] }) => (
+  <div>
+    {users.map(user => (
+      <div key={user.githubLogin}>
+        <img src={user.avatar} alt="" />
+        {user.name}
+      </div>
+    ))}
+    <button onClick={addUser}>Add User</button>
+  </div>
+);
+
+const render = ({ allUsers = [] }) =>
+  ReactDOM.render(<App users={allUsers} />, document.getElementById("root"));
+
+const addUser = () =>
+  request(url, mutation, { count: 1 })
+    .then(requestAndRender)
+    .catch(console.error);
+
+const requestAndRender = () =>
+  request(url, query)
+    .then(render)
+    .catch(console.error);
+
+requestAndRender();
