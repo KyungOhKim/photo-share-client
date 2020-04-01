@@ -21,7 +21,7 @@ const CurrentUser = ({ name, avatar, logout }) => (
 );
 
 const Me = ({ logout, requestCode, signingIn }) => (
-  <Query query={ROOT_QUERY}>
+  <Query query={ROOT_QUERY} fetchPolicy="cache-only">
     {({ loading, data }) =>
       data.me ? (
         <CurrentUser {...data.me} logout={logout} />
@@ -54,7 +54,7 @@ class AuthorizedUser extends Component {
   }
 
   requestCode() {
-    var clientID = "e55f2bbb04fee0a0bd21";
+    var clientID = process.env.REACT_APP_CLIENT_ID;
     window.location = `http://github.com/login/oauth/authorize?client_id=${clientID}&scope=user`;
   }
 

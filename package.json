@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "acorn": "^7.1.1",
     "apollo-boost": "^0.4.7",
+    "apollo-cache-persist": "^0.1.1",
     "graphql": "^14.6.0",
     "graphql-request": "^1.8.2",
     "react": "^16.13.1",

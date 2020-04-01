@@ -4,7 +4,7 @@ import { ROOT_QUERY } from "./App";
 import { gql } from "apollo-boost";
 
 const Users = () => (
-  <Query query={ROOT_QUERY}>
+  <Query query={ROOT_QUERY} fetchPolicy="cache-and-network">
     {({ data, loading, refetch }) =>
       loading ? (
         <p>사용자 불러오는 중...</p>
