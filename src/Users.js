@@ -17,7 +17,7 @@ const Users = () => (
   <Query query={ROOT_QUERY} fetchPolicy="cache-and-network">
     {({ data, loading, refetch }) =>
       loading ? (
-        <p>사용자 불러오는 중...</p>
+        <p>loading users...</p>
       ) : (
         <UserList
           count={data.totalUsers}
@@ -29,26 +29,15 @@ const Users = () => (
   </Query>
 );
 
-const updateUserCache = (cache, { data: { addFakeUsers } }) => {
-  let data = cache.readQuery({ query: ROOT_QUERY });
-  data.totalUsers += addFakeUsers.length;
-  data.allUsers = [...data.allUsers, ...addFakeUsers];
-  cache.writeQuery({ query: ROOT_QUERY, data });
-};
-
 const UserList = ({ count, users, refetch }) => (
   <div>
     <p>{count} Users</p>
-    <button onClick={() => refetch()}>다시 가져오기</button>
-    <Mutation
-      mutation={ADD_FAKE_USERS_MUTATION}
-      variables={{ count: 1 }}
-      update={updateUserCache}
-    >
-      {addFakeUsers => <button onClick={addFakeUsers}>임시 사용자 추가</button>}
+    <button onClick={() => refetch()}>Refetch</button>
+    <Mutation mutation={ADD_FAKE_USERS_MUTATION} variables={{ count: 1 }}>
+      {(addFakeUsers) => <button onClick={addFakeUsers}>Add Fake User</button>}
     </Mutation>
     <ul>
-      {users.map(user => (
+      {users.map((user) => (
         <UserListItem
           key={user.githubLogin}
           name={user.name}
