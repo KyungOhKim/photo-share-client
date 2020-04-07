@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 import { Mutation, Query, withApollo } from "react-apollo";
 import compose from "lodash.flowright";
 import { gql } from "apollo-boost";
@@ -18,6 +18,7 @@ const CurrentUser = ({ name, avatar, logout }) => (
     <img src={avatar} width={48} height={48} alt="" />
     <h1>{name}</h1>
     <button onClick={logout}>logout</button>
+    <NavLink to="/newPhoto">Post Photo</NavLink>
   </div>
 );
 
@@ -27,7 +28,7 @@ const Me = ({ logout, requestCode, signingIn }) => (
       data.me ? (
         <CurrentUser {...data.me} logout={logout} />
       ) : loading ? (
-        <p>loading</p>
+        <p>loading... </p>
       ) : (
         <button onClick={requestCode} disabled={signingIn}>
           Sign In with Github
@@ -73,7 +74,7 @@ class AuthorizedUser extends Component {
         update={this.authorizationComplete}
         refetchQueries={[{ query: ROOT_QUERY }]}
       >
-        {mutation => {
+        {(mutation) => {
           this.githubAuthMutation = mutation;
           return (
             <Me
